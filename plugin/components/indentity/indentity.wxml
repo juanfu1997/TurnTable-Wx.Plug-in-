@@ -1,0 +1,119 @@
+<!-- <view wx:for="{{list}}" wx:key="name">
+  <view>{{item.name}}:{{item.price}}</view>
+</view> -->
+<view wx:if="{{open}}">
+    <view class="text">滑动设置选项个数</view>
+
+  <view class="main">
+    <view class="canvas-container">
+        <!-- <image class="bg" mode="aspectFit" src="{{img}}{{style[0].bg}}.png" ></image>
+        <image class="cover" mode="aspectFit " src="{{img}}bg_{{style[0].cover}}.png"></image> -->
+      <view  animation="{{animationData}}" class="canvas-content" >
+        <canvas style="width: 180px; height: 180px; " class="canvas-element" canvas-id="lotteryCanvas"></canvas>
+        <image class="res" src="{{res}}"></image>
+
+        
+      </view>
+
+      <image  class="pointer" src="http://www.korjo.cn/xcx/luckyImg/{{style[0].pointer}}.png" mode="aspectFit" ></image>
+      
+      <!-- <view class="canvas-btn" style="font-family:Comic Sans MS;font-size:18px;color:#333333; ">11</view>  -->   
+    </view>
+
+    <view class="slider_box">
+    <slider class="slider" min="2" max="8" show-value="true" selected-color="#91c892" bindchange="slider" step="2" value="{{length}}"></slider>
+    <view bindtap="tips" class="tips">?</view>
+    </view>
+        <view class="tips_text" style="display: {{tips}};">
+        <text>温馨提示:\n</text>
+        <text>答案数量越多，显示的位置越小哦！</text>
+        <text>不要太贪心！</text>
+    </view>
+  </view>
+  <view class="text">点击设置转盘皮肤</view>
+  <view class="thumbnail_box">
+    <view class="image" wx:for="{{thumbnail}}" wx:key="index" >
+    <image class="thumbnail" src="{{thumbnail[index].src}}" data-id="{{index}}" bindtap="choice" ></image>
+      <view class="{{choice_type[index].choice}}"  data-id="{{index}}" bindtap="choice"></view>
+    </view>
+    <!-- <view class="image">
+    <image class="thumbnail" src="{{img}}thumbnail_1.png"></image>
+      <view class="choice"></view>
+    </view>
+    <view class="image">
+    <image class="thumbnail" src="{{img}}thumbnail_1.png"></image>
+      <view class="choice"></view>
+    </view> -->
+  </view>
+   <view class="text">选择有效期</view>
+   <view class="validtyTime">
+     <picker  mode="date" start="{{startTime.date}}" data-type='1' bindchange="choiceValidtyTime">
+       <view class="picker">{{validtyTime.date}}</view>
+     </picker>
+     <picker mode="time"  data-type='2' bindchange="choiceValidtyTime">
+       <view class="picker" start="00:00">{{validtyTime.time}}</view>
+     </picker>
+   </view>
+  <view class="text">填写中奖兑换方法</view>
+  <view class="exchange">
+    <!-- <view></view> -->
+    <input class="addCustom" placeholder="eg:添加微信号'kefy001',截图发送" />
+  </view>
+  <view class="text">选择或自定义问题</view>
+  <!-- <view  class="custom_box" wx:for="{{custom}}" data-id="{{index}}" wx:key="index" bindtap="custom">
+    <view class="custom">{{custom[index].problem}}</view>
+    <view class="{{custom_type[index].custom}}"  data-id="{{index}}" ></view>
+  </view> -->
+
+  <view class="custom_box">
+    <input bindblur="addTxt" value="{{addCustom}}" class="addCustom" placeholder="自定义问题（标题建议10个字以内）" maxlength="10" cursor-spacing="100" />
+    <!-- <view class="{{custom_type[3].custom}}"  data-id="3" bindtap="custom"></view> -->
+    <!-- <view bindblur="addCustom" class="addIcon">+</view> -->
+  </view>
+
+  <view bindtap="next" class="next">下一步</view>
+  </view>
+  <view class="set" wx:if="{{!open}}">
+    <view class="text">设置问题答案</view>
+      <view class="main">
+      <view class="canvas-container">
+          <!-- <image class="bg" mode="aspectFit" src="{{img}}{{style[0].bg}}.png" ></image>
+          <image class="cover" mode="aspectFit " src="{{img}}bg_{{style[0].cover}}.png"></image> -->
+          <image  class="pointer" src="http://www.korjo.cn/xcx/luckyImg/{{style[0].pointer}}.png" mode="aspectFit" ></image>
+        <view  animation="{{animationData}}" class="canvas-content" >
+              <view class="canvas-list" wx:for="{{awardsList}}" wx:key="unique">
+                <view class="canvas-item">
+                    <text class="canvas-item-text" style="-webkit-transform: rotate({{item.turn}});transform: rotate({{item.turn}})">{{item.award}}</text>
+                </view>
+              </view>
+          <image class="res" src="{{res}}"></image>               
+        </view>
+        
+        
+        <!-- <view class="canvas-btn" style="font-family:Comic Sans MS;font-size:18px;color:#333333; ">11</view>  -->   
+      </view>
+      
+    </view>
+    <view class="main-container-btn">
+        <view style="width: 40%;" >
+          <view class="answer">
+            奖品
+          </view>
+        </view>
+        <view class="answerNum">数量</view>
+        <view class="answerProbability">概率</view>
+    </view>
+    <view class="main-container-btn" wx:for="{{awardsList}}" wx:key="num" wx:for-index="index" >
+        <view style="width: 40%;">
+          <input id="{{index}}"  bindconfirm="daiti" bindblur="daiti" type="text" maxlength="8"  class="answer"  data-index="{{index}}"   value="{{awardsList[index].award}}"  placeholder="请输入奖品(限8字)" cursor-spacing="100" />
+        </view>
+        <input type="number" class="answerNum" data-index="{{index}}" value="{{awards[index].answerNum}}" bindconfirm="answerNum" bindblur="answerNum" />
+        <input type="digit" class="answerProbability" data-index="{{index}}"  value="{{awards[index].answerProbability}}" bindconfirm="answerProbability" bindblur="answerProbability" />
+
+    </view>
+    <view class="btn-save">
+      <view class="last" bindtap="last">上一步</view>
+        <view class="save" bindtap="save">保存</view>
+    </view>
+    
+  </view>

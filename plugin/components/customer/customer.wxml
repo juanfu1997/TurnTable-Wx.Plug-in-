@@ -1,0 +1,107 @@
+<view style="width:100%;height:100%;overflow: hidden;" hidden="{{IsShowPrize}}">
+  <view>
+    <!-- <image class="index" mode="aspectFit" src="{{img}}backindex.png"></image> -->
+    <!-- <view class="index" hidden="">
+      <text bindtap="backindex" class="backindex">旅行转盘</text>
+      <text bindtap="setindex" class="setindex">设为首页</text>
+    </view> -->
+    <view class="box">
+      <image class="title" src="{{img}}title2.png"></image>
+      <text class="text">我要不要去旅行? </text>
+    </view>
+    <view class="validityTime">
+      <view class="Time">有效期截至{{validtyTime}}</view>
+    </view>
+  </view>
+
+  <view class="wrapper">
+
+
+  <view class="main">
+
+    <view class="canvas-container">
+            <image class="cover"  src="{{img}}{{style[0].cover}}.png"></image>
+        <image class="bg"  src="{{img}}{{style[0].bg}}.png" ></image>
+        <image bindtap="getLottery" class="pointer" src="http://www.korjo.cn/xcx/luckyImg/{{style[0].pointer}}.png" mode="aspectFit" ></image>
+        <canvas style="width: 260px; height: 260px;" class="canvas-element" canvas-id="lotteryCanvas"></canvas>
+      <view  animation="{{animationData}}" class="canvas-content" >
+        
+
+        <view class="canvas-list" wx:for="{{awardsList}}" wx:key="unique">
+          <view class="canvas-item">
+              <text class="canvas-item-text" style="-webkit-transform: rotate({{item.turn}});transform: rotate({{item.turn}})">{{item.award}}</text>
+          </view>
+        </view>
+        
+        <image class="res" src="{{img}}{{res}}"></image>
+      </view>
+    </view>
+    <!-- <image bindtap='try_advanced' class="try" src="{{img}}try_advanced.png" mode="aspectFit"></image> -->
+  </view>
+  </view>
+  <view class="footer">
+    <view class="myPrizes" bindtap="showMyPrizes">查看我的奖品</view>
+    <view class="rule">
+      <view class="rule-title">活动规则</view>
+      <view class="rule-content">
+        <text>1.领奖联系方式:{{}}</text>
+        <text>2.本活动最终解释权归商家所有;</text>
+      </view>
+      <view class="admin" bindtap="adminLogin">
+        管理员
+      </view>
+    </view>
+    
+    
+  </view>
+  
+
+<view class="{{demo}}">
+  <view style="width: 100%;height: 100%;" bindtap="demo" ></view>
+<view  class="result_box" hidden="1">
+
+    <image class="result" src="{{img}}result.png"></image>
+    <view class="detail">
+      <p>{{prize}}</p>
+    </view>
+    <view class="choice">
+      <image catchtap="demo" class="again" src="{{img}}again.png"></image>
+      <!-- <image catchtap="try_advanced" class="advanced" src="{{img}}advanced.png"></image> -->
+    </view>
+</view>
+<view class="login" hidden="">
+  <view class="userName">
+    <view class="input-text">帐号:</view>
+    <input type="text" placeholder="管理员帐号" data-type="name" catchblur="saveAdminInfo" />
+  </view>
+  <view class="passWord">
+    <view class="input-text">密码:</view>
+    <input password="true" placeholder="管理员密码" data-type="passWord" catchblur="saveAdminInfo" />
+  </view>
+  <view class="postform" bindtap="postAdminInfo">
+    确定
+  </view>
+</view>
+</view>
+</view>
+<view class="index" hidden="{{!IsShowPrize}}">
+  <view class="list_box">
+    <view class="listDemo">
+      <view class="list-title">我的奖品</view>
+      <view class="list-content">
+        <view>你获得的奖品是：</view>
+        <view style="color:red;">1{{}}</view>
+      </view>
+    </view>
+    <view class="listDemo">
+      <view class="list-title">获奖用户</view>
+      <scroll-view class="list-content2"  scroll-y="true" scroll-into-view="{{scrollId}}" scroll-with-animation="{{IsScrollCss}}" >
+        <view id="index{{index}}" wx:for="{{userList}}" class="prizeList">
+          <view class="prizeUser">wowo</view>
+          <view class="prizeName">{{index}}</view>
+        </view>
+      </scroll-view>
+    </view>
+    <view class="" bindtap="showMyPrizes">返回抽奖</view>
+  </view>
+</view>

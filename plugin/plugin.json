@@ -1,0 +1,7 @@
+{
+  "publicComponents": {
+    "customer": "components/customer/customer",
+    "indentity":"components/indentity/indentity"
+  },
+  "main": "index.js"
+}

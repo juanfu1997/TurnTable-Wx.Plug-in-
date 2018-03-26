@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "customer": "plugin://myPlugin/customer",
+    "indentity":"plugin://myPlugin/indentity"
+  }
+}
