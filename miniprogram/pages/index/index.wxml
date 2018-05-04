@@ -1,2 +1,2 @@
-<customer />
-<indentity />
+<customer wxpublic_id="{{wxpublic_id}}" userid="{{userid}}" awrads="{{awrads}}" wx:if="{{!page}}"/>
+<!-- <indentity wx:if="{{!page}}"/> -->

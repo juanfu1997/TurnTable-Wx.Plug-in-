@@ -154,10 +154,11 @@ left:-62rpx;
 .addCustom{
   height: 48rpx;
   min-height:1em;
-  width: 100%;
+  /*width: 100%;*/
   font-size: 28rpx;
+  flex-grow: 1;
   text-align: left;
-  margin:20rpx 40rpx;
+  margin:20rpx 20rpx;
   border-bottom: 2rpx solid #ccc;
 }
 .addIcon{
@@ -306,16 +307,12 @@ left:-62rpx;
   background-color: #f5f5f5;
 }
 .canvas-element{
-  /*width: inherit;
-  height: inherit;
-  border-radius: 50%;*/
   position: absolute;
-/*  left: -500px;
-  top: -500px;*/
+  left: -800px;
+  top: -800px;
   width: inherit;
   height: inherit;
   border-radius: 50%;
-  /*background-color: red;*/
 }
 .canvas-list{
   position: absolute;
@@ -394,7 +391,7 @@ left:-62rpx;
     transition: all 6s ease;
 }
 
-.main{
+.title, .main{
 	margin-top: 20rpx;
 
 }
@@ -424,6 +421,6 @@ left:-62rpx;
 .exchange{
   display: flex;
   flex: 1;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  align-items: center;
 }

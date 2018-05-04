@@ -1,10 +1,6 @@
 <view style="width:100%;height:100%;overflow: hidden;" hidden="{{IsShowPrize}}">
   <view>
-    <!-- <image class="index" mode="aspectFit" src="{{img}}backindex.png"></image> -->
-    <!-- <view class="index" hidden="">
-      <text bindtap="backindex" class="backindex">旅行转盘</text>
-      <text bindtap="setindex" class="setindex">设为首页</text>
-    </view> -->
+
     <view class="box">
       <image class="title" src="{{img}}title2.png"></image>
       <text class="text">我要不要去旅行? </text>
@@ -33,7 +29,7 @@
           </view>
         </view>
         
-        <image class="res" src="{{img}}{{res}}"></image>
+        <image class="res" src="{{res}}"></image>
       </view>
     </view>
     <!-- <image bindtap='try_advanced' class="try" src="{{img}}try_advanced.png" mode="aspectFit"></image> -->
@@ -42,10 +38,10 @@
   <view class="footer">
     <view class="myPrizes" bindtap="showMyPrizes">查看我的奖品</view>
     <view class="rule">
-      <view class="rule-title">活动规则</view>
+      <view class="rule-title" bindtap="showActiveRule">点击查看活动规则</view>
       <view class="rule-content">
-        <text>1.领奖联系方式:{{}}</text>
-        <text>2.本活动最终解释权归商家所有;</text>
+        <!-- <text>1.领奖联系方式:{{}}</text>
+        <text>2.本活动最终解释权归商家所有;</text> -->
       </view>
       <view class="admin" bindtap="adminLogin">
         管理员
@@ -69,7 +65,7 @@
       <!-- <image catchtap="try_advanced" class="advanced" src="{{img}}advanced.png"></image> -->
     </view>
 </view>
-<view class="login" hidden="">
+<view class="login" hidden="{{IsLogin}}">
   <view class="userName">
     <view class="input-text">帐号:</view>
     <input type="text" placeholder="管理员帐号" data-type="name" catchblur="saveAdminInfo" />
@@ -81,6 +77,22 @@
   <view class="postform" bindtap="postAdminInfo">
     确定
   </view>
+</view>
+<view class="act-rule" hidden="{{isRule}}">
+  <view class="act-title">活动规则</view>
+  <view class="act-rope">
+    <image mode="widthFix" src="{{img}}rope.png"></image>
+    <image mode="widthFix" src="{{img}}rope.png"></image>
+  </view>
+  <scroll-view scroll-y style="height: 600rpx;margin-top: 40rpx;">
+      <view class="act-detail">
+         <view class="detail-ul" wx:for="{{rule}}">
+           <view>{{index+1}}.</view>
+           <text>{{item.value}}</text>
+         </view>
+      </view>
+  </scroll-view>
+  <image class="act-close" mode="widthFix" src="{{img}}close.png" bindtap="closeRule"></image>
 </view>
 </view>
 </view>

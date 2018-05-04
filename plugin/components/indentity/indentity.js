@@ -1,8 +1,15 @@
+// const $$ = require('../../api/request')
+const {$,$$} = require('../../index.js')
 Component({
+  properties:{
+    awards:{
+      type:Array,
+    },
+  },
   data: {
     img:'https://www.korjo.cn/xcx/luckyImg/',
     tips: 'none',
-    open: true,
+    open: 2,
     awardsList: {},
     res: 'https://www.korjo.cn/xcx/luckyImg/thumbnail.png',
     length: '4',
@@ -23,12 +30,12 @@ Component({
     ],
     animationData: {},
     btnDisabled: '',
-    awards: [
-      { option: "1", name: '', detail: "1", answerNum: '', answerProbability: '', },
-      { option: "2", name: '', detail: "2", answerNum: '', answerProbability: '', },
-      { option: "3", name: '', detail: "3", answerNum: '', answerProbability: '', },
-      { option: "4", name: '', detail: "4", answerNum: '', answerProbability: '', },
-    ],
+    // awards: [
+    //   { name: '', ratio:'0.2',bigprize:1,activeid:'89',image:'',rotate:'',leve:'',detail: "1"},
+    //   { name: '', ratio:'0.6',bigprize:0,activeid:'89',image:'',rotate:'',leve:'',detail: "1"},
+    //   { name: '', ratio:'0.2',bigprize:0,activeid:'89',image:'',rotate:'',leve:'',detail: "1"},
+    //   { name: '', ratio:'0.2',bigprize:0,activeid:'89',image:'',rotate:'',leve:'',detail: "1"},
+    // ],
     awards_list: [{
       award: [
         { answer: '鱼香肉丝' },
@@ -73,6 +80,9 @@ Component({
       { problem: '今天穿什么？' },
       { problem: '谁去拿快递？' },
     ],
+    activeRule:[
+      {detail:''}
+    ],
     validtyTime: { date: '2099-12-1', time: '23：59' },
     nowDate: { date: '', time: '' },
     startTime: { date: '', time: '' },
@@ -82,6 +92,15 @@ Component({
   },
   //自定义时间
   methods:{
+    addActiveRule(e){
+      var index = e.currentTarget.dataset.index
+      var activeRule = this.data.activeRule
+      activeRule.push({detail:''})
+      this.setData({
+        activeRule
+      })
+
+    },
   choiceValidtyTime(e) {
     console.log(e)
     var that = this
@@ -154,36 +173,7 @@ Component({
 
     }
   },
-  //   addCustom(){
-  //     var that = this;
-  //     var value = that.data.addCustom;
-  //     var custom = that.data.custom;
-  //     var add = {problem:value};
-  //     if(!value){
-  //       wx.showModal({
-  //   title: '提示',
-  //   content: '问题不允许为空',
-  //   success: function(res) {
 
-  //     if (res.confirm) {
-  //       console.log('用户点击确定')
-  //     } else if (res.cancel) {
-  //       console.log('用户点击取消')
-  //     }
-  //   }
-  // })
-  //     }else{
-  //       custom.splice(3,1,add);
-  //       that.setData({
-  //         custom:custom,
-  //         addCustom:''
-  //       })
-  //       console.log(custom)
-  //       console.log(value)
-
-  //     }
-
-  //   },
   answerProbability(e) {
     var that = this
     var value = e.detail.value
@@ -206,8 +196,19 @@ Component({
   },
   answerNum(e) {
     var that = this
+    var index = e.currentTarget.dataset.index
     var num = e.detail.value
+    var awards = that.data.awards
+
     console.log(e)
+  },
+  textLength(value,cb){
+    if (value !== '') {
+      console.log(8888)
+      cb&&cb()
+    } else {
+      $.alert('输入不能为空')
+    }
   },
   //获取改变的行数，改变值  控制转盘内文字更改
   daiti: function (e) {
@@ -215,31 +216,29 @@ Component({
     console.log('199' + this.length);
     console.log('1', e);
     var index = e.currentTarget.dataset.index;
-    //var id = e.target.id
-    //console.log("index" + index);
     var awards = this.data.awards;
     console.log("000" + index);
-    var value = (e.detail.value).replace(/\s/g, "");;
-    console.log('9999999', awards[index].name)
-    if (value !== '') {
-      console.log(8888)
-      awards[index].name = value;
-      that.setData({
-        awards: awards
-      })
-    } else {
-      wx.showModal({
-        title: '提示',
-        content: '答案不允许为空',
-        success: function (res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-          } else if (res.cancel) {
-            console.log('用户点击取消')
+    var value = (e.detail.value).replace(/\s/g, "");
+          console.log(11+value)
+
+      this.textLength(value,function(){
+        switch(e.currentTarget.dataset.type)
+          {
+          case '0':
+              awards[index].name = value;
+              
+            break;
+          case '1':
+            break;
+          case '2':
+              awards[index].ratio = value
+            break;
+          default:
           }
-        }
       })
-    }
+
+    console.log('9999999', awards[index].name)
+    
     that.setlist();
     console.log('awards', awards)
   },
@@ -260,13 +259,6 @@ Component({
 
 
 
-
-      // awards: [
-      //   { 'name': that.data.awards},
-      //   console.log(that.data.awards)
-
-
-      // ]
     }
     that.refresh();
     console.log("1 " + that.data.awardsList.awards)
@@ -277,7 +269,7 @@ Component({
   last() {
     var that = this;
     that.setData({
-      open: true
+      open: that.data.open-1
     })
   },
   //保存用户填写预设问题答案
@@ -286,70 +278,67 @@ Component({
     var id = that.data.id;                                                   //轮盘样式id
     var awards = that.data.awards;
     var length = that.data.length;
-    var pro_id = that.data.pro_id;
-    var question = that.data.custom[pro_id].problem;     //获取问题文本
-    //console.log(question)
-
-    //提示用户保存成功
-    wx.showToast({
-      title: '保存成功',
-      icon: 'success',
-      duration: 2000
-    })
+    // var pro_id = that.data.pro_id;
+    // var question = that.data.custom[pro_id].problem;     //获取问题文本
+    
 
 
-    for (var i = 0; i < length; i++) {
-      //console.log('11',awards[i].name)
-      if (!awards[i].name) {
-        //console.log('第',i+1,'个选项没有填答案')
-        that.setData({
-          yz: false
-        })
-      } else {
-        that.setData({
-          yz: true
-        })
-      }
 
-    }
+    
+    // for (var i = 0; i < length; i++) {
+    //   //console.log('11',awards[i].name)
+      
+    //   }
+
+    
 
     if (that.data.yz) {
       wx.setStorageSync('awards', awards);
       wx.setStorageSync('length', length);
-      wx.navigateTo({
-        url: '../advanced-lucky/advanced-lucky?id=' + id,
-        fail: function (res) {
-          console.log(res)
+
+      $.each(awards,(i,v) => {
+        const prizeCommon = {
+          name:v.name,
+          ratio:v.ratio,
+          bigprize:v.bigprize,
+          activeid:92,
+          image:v.image,
+          rotate:360/awards.length,
+          // leve:'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1109917053,4211270766&fm=27&gp=0.jpg',
+          // detail:1,
         }
+        $$.SavePrizeCommon(prizeCommon)
       })
+
+    
 
       //console.log('txt',awards)
 
-      var answers = JSON.stringify(awards);
-      wx.setStorageSync('awards', awards);              //本地保存用户填写答案
-      wx.setStorageSync('question', question);                             //本地保存用户填写答案
-      console.log('answers', answers)
-      var openid = wx.getStorageSync('user_openid');   //用户openid
-      var user_id = wx.getStorageSync('user_id');      //根据id判断保存还是更新
-      console.log('id', user_id)
-      console.log('openidtext', openid)
-      var jsonData = { answer_num: 0, css_style: id, question: question, answerjson: answers, openid: openid, id: user_id };
-      wx.request({
-        url: 'https://www.korjo.cn/KorjoApi/SaveTurnTable', //仅为示例，并非真实的接口地址
-        data: {
-          jsonData: JSON.stringify(jsonData)
-        },
-        header: {
-          'content-type': 'application/x-www-form-urlencoded' // 默认值
-        },
-        method: "POST",
-        success: function (res) {
-          console.log(res.data, jsonData)
-          wx.hideToast();                             //取消提示
-        }, fail(res) {
-          console.log('保存失败,error：', res)
-        }
-      })
+      // var answers = JSON.stringify(awards);
+      // wx.setStorageSync('awards', awards);              //本地保存用户填写答案
+      // wx.setStorageSync('question', question);                             //本地保存用户填写答案
+      // console.log('answers', answers)
+      // var openid = wx.getStorageSync('user_openid');   //用户openid
+      // var user_id = wx.getStorageSync('user_id');      //根据id判断保存还是更新
+      // console.log('id', user_id)
+      // console.log('openidtext', openid)
+      // var jsonData = { answer_num: 0, css_style: id, question: question, answerjson: answers, openid: openid, id: user_id };
+      // wx.request({
+      //   url: 'https://www.korjo.cn/KorjoApi/SaveTurnTable', //仅为示例，并非真实的接口地址
+      //   data: {
+      //     jsonData: JSON.stringify(jsonData)
+      //   },
+      //   header: {
+      //     'content-type': 'application/x-www-form-urlencoded' // 默认值
+      //   },
+      //   method: "POST",
+      //   success: function (res) {
+      //     console.log(res.data, jsonData)
+      //     wx.hideToast();                             //取消提示
+      //   }, fail(res) {
+      //     console.log('保存失败,error：', res)
+      //   }
+      // })
 
 
     } else {
@@ -365,11 +354,24 @@ Component({
         }
       })
     }
+    // const activeInfo = {
+    //   actname:'11',
+    //   enddate:'2018-04-01',
+    //   stardate:'2018-02-01',
+    //   activeset:'fasdf',
+    //   count:2,
+    //   rouletteimg:'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1109917053,4211270766&fm=27&gp=0.jpg',
+    //   pointerimg:'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1109917053,4211270766&fm=27&gp=0.jpg',
+    //   wxpublic_id:1,
+    //   drawtype:5,
+    // }
+    // $$.SaveActiveInfo(activeInfo)
+
   },
 
 
   // 点击下一步，把选到的问题和答案代替进去默认的答案
-  next() {
+  next(e) {
     var that = this;
     var awards = that.data.awards;
     var pro_id = that.data.pro_id;
@@ -377,32 +379,30 @@ Component({
     var length = that.data.length;
     var awardsList = that.data.awardsList;
     var awards_list = that.data.awards_list[pro_id].award;
-    console.log(awards)
-    // if(pro_length >= length){
-    //    for(var i=0;i<length;i++){
-    //     awards.splice(0,length,pro_length[i])
-    //    }
-    // }
-    if (pro_id == 3) {
-      // problem.push({problem:},)
-    }
-    if (length >= awards_list.length) {
-      for (var i = 0; i < awards_list.length; i++) {
-        awardsList[i].award = awards[i].name = awards_list[i].answer;
+    var open = that.data.open;
+    $.each(awards,(i,v) => {
+    console.log('awards'+v.name)
+    if (!v.name) {
+        that.setData({
+          yz: false
+        })
+      } else {
+        that.setData({
+          yz: true
+        })
       }
-    } else {
-      for (var i = 0; i < length; i++) {
-        awardsList[i].award = awards[i].name = awards_list[i].answer;
-      }
-    }
-    console.log(awards)
-    that.setData({
-      open: false,
-      awards: awards,
-      awardsList: awardsList
-
     })
-    // console.log(id)
+    if(that.data.open==1&&that.data.yz){
+      that.setData({
+        open:open+1,
+        awards: awards,
+        awardsList: awardsList
+      })
+    }else{
+      console.log('open'+ that.data.open)
+    }
+    console.log(typeof that.data.open)
+    
 
   },
   slider(e) {
@@ -485,8 +485,8 @@ Component({
         wx.canvasToTempFilePath({
           x: 0,
           y: 0,
-          width: 180,
-          height: 180,
+          width: 540,
+          height: 540,
           destWidth: 540,
           destHeight: 540,
           canvasId: 'lotteryCanvas',
@@ -511,6 +511,7 @@ Component({
       chance: true,
       awards: that.data.awards
     }
+    console.log(app.awardsConfig.awards)
     //console.log('180',app.awardsConfig.awards)
     // 绘制转盘
     var id = that.data.id;
@@ -584,8 +585,8 @@ Component({
       wx.canvasToTempFilePath({
       x: 0,
       y: 0,
-      width: 180,
-      height: 180,
+      width: 540,
+      height: 540,
       destWidth: 540,
       destHeight: 540,
       canvasId: 'lotteryCanvas',
@@ -773,8 +774,8 @@ Component({
     wx.canvasToTempFilePath({
       x: 0,
       y: 0,
-      width: 180,
-      height: 180,
+      width: 540,
+      height: 540,
       destWidth: 540,
       destHeight: 540,
       canvasId: 'lotteryCanvas',
@@ -796,7 +797,6 @@ Component({
     // setTimeout(function(){
     //   console.log('10s')
     // },10000);
-
     var that = this;
     var nowDate = that.data.nowDate
     var startTime = that.data.startTime
@@ -876,6 +876,8 @@ Component({
   attached(){
     var that = this;
     that.refresh();
+    
+    console.log(121)
     // that.failCanvas();
   }
 

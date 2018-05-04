@@ -1,11 +1,21 @@
+const {$,$$} = require('../../index.js')
+
 Component({
+  properties:{
+    wxpublic_id:{
+      type:String,
+    },
+    userid:{
+      type:String,
+    }
+  },
   data: {
     img:'https://www.korjo.cn/xcx/luckyImg/',
     awardsList: {},
     animationData: {},
     btnDisabled: '',
     user_style:{bg:'bg2',cover:'bg_cover',pointer:'pointer2',color1:'#c8f8fb',color2:'#e7c5e0'},
-    res:'thumbnail.png',
+    res:'https://www.korjo.cn/xcx/luckyImg/thumbnail.png',
     demo:'demo',
     awards:[
         // {option:"1",name:'12',detail:"1"},
@@ -20,9 +30,13 @@ Component({
            {bg:'bg2',cover:'bg_cover',pointer:'pointer2',color1:'#c8f8fb',color2:'#e7c5e0'},
            {bg:'bg3',cover:'bg_cover2',pointer:'pointer3',color1:'#fcfa31',color2:'#faca00'}
            ],
+    rule:[
+          {value:'领奖联系方式领奖联系方式领奖联系方式领奖联系方式'},
+    ],
     validtyTime:'2018.03.23-2018.03.30',
     adminInfo:{name:'',passWord:''},
     userList:[
+              {id:1},
               {id:1},
               {id:1},
               {id:1},
@@ -31,10 +45,24 @@ Component({
     scrollId:'index0',
     IsScrollCss:true,
     IsShowPrize:false,
+    IsLogin:true,
+    isRule:true,
     app:{awardsConfig:{chance:'',awards:''},},
 
   },
   methods:{
+    closeRule(){
+      this.setData({
+        isRule:true,
+        demo:'demo'
+      })
+    },
+  showActiveRule(){
+    this.setData({
+      demo:'demo_block',
+      isRule:false,
+    })
+  },
   showMyPrizes(){
     var that = this
     var IsShowPrize = that.data.IsShowPrize
@@ -61,14 +89,19 @@ Component({
     console.log(e)
   },
   postAdminInfo(){
+    this.setData({
+      demo:'demo',
+      IsLogin:true,
+    })
     //
   },
   adminLogin(){
-    var that = this
-    var demo = that.data.demo
-    demo = 'demo_block'
-    that.setData({
-      demo,
+    // var that = this
+    // var demo = that.data.demo
+    // demo = 'demo_block'
+    this.setData({
+      demo:'demo_block',
+      IsLogin:false,
     })
 
   },
@@ -116,7 +149,9 @@ Component({
   },  
   demo(){
     this.setData({
-      demo:'demo'
+      demo:'demo',
+      IsLogin:true,
+      isRule:true,
     })
   },
   try_advanced(){
@@ -198,6 +233,7 @@ Component({
 
 
   },
+ 
   refresh(){
     var that = this;
     var app = that.data.app;
@@ -277,16 +313,16 @@ Component({
       wx.canvasToTempFilePath({
       x: 0,
       y: 0,
-      width: 180,
-      height: 180,
+      width: 540,
+      height: 540,
       destWidth: 540,
       destHeight: 540,
       canvasId: 'lotteryCanvas',
 
       success: function (res) {
-        that.setData({
-          res: res.tempFilePath
-        })
+          that.setData({
+            res: res.tempFilePath
+          })
         //     wx.saveImageToPhotosAlbum({
         //       filePath:res.tempFilePath,
         //     success(res) {
@@ -305,11 +341,28 @@ Component({
     })
        //.log('awardsConfig',that.data.awardsList)  
   },
+  getNewestActiveInfo(){
+    const { wxpublic_id,userid } = this.data
+    $$.GetActiveList().then(res=>{
+      let a = []
+      $.each(res,(i,v) => {
+        if(v.wxpublic_id==wxpublic_id){
+          a.push(v)
+        }
+      })
+      // let b = a[a.length-1]
+      console.log('bs',wxpublic_id,userid,this.data)
+      $$.GetActiveInfo(userid)
+    })
+    // this.setData({
+    //   info:b
+    // })
+  },
   autoScroll(length){
     var that = this
     var scroll = 0
     var scrollId = that.data.scrollId
-    var scrollHeight = 3
+    var scrollHeight = that.data.userList.length
     var IsScrollCss = that.data.IsScrollCss
     // var scrollHeight = that.data.scrollHeight
     clearInterval(that.tt)
@@ -346,35 +399,30 @@ Component({
     //   num:num
     // })
     that.autoScroll()
-    wx.request({
-        url: 'https://www.korjo.cn/KorjoApi/GetTurnTableInfo?answer_num='+4, //仅为示例，并非真实的接口地址
-        data: {
-          // answer_num:6,
-        },
-        header: {
-            'content-type': 'application/x-www-form-urlencoded' // 默认值
-        },
-        method:"POST",
-        success: function(res) {
-          //console.log(res.data)
-          wx.setStorageSync('num',num);
-          var awards = that.data.awards;
-          var answer = res.data.answerList;
-           awards = answer;
-
-          
-          
-          
-          that.setData({
-            awards:awards
-          })
-          console.log('awards1',awards)
-          that.refresh();
-          // that.
-        },fail(w){
-          console.log(w)
-        }
-      })
+    that.getNewestActiveInfo()
+    // wx.request({
+    //     url: 'https://www.korjo.cn/KorjoApi/GetTurnTableInfo?answer_num='+4, //仅为示例，并非真实的接口地址
+    //     data: {
+    //       // answer_num:6,
+    //     },
+    //     header: {
+    //         'content-type': 'application/x-www-form-urlencoded' // 默认值
+    //     },
+    //     method:"POST",
+    //     success: function(res) {
+    //       var awards = that.data.awards;
+    //       var answer = res.data.answerList;
+    //        awards = answer;
+    //       that.setData({
+    //         awards:awards
+    //       })
+    //       console.log('awards1',awards)
+    //       that.refresh();
+    //       // that.
+    //     },fail(w){
+    //       console.log(w)
+    //     }
+    //   })
     
 
 

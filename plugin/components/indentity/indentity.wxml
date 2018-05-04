@@ -1,7 +1,22 @@
 <!-- <view wx:for="{{list}}" wx:key="name">
   <view>{{item.name}}:{{item.price}}</view>
 </view> -->
-<view wx:if="{{open}}">
+<view hidden="{{open!=0}}">
+    <!-- <view class="text">填写活动名称</view>
+    <view>
+      <input class="addCustom" placeholder="请填写活动名称，字数限制在8个字以内" />
+    </view> -->
+    <view class="text">选择或自定义问题</view>
+  <!-- <view  class="custom_box" wx:for="{{custom}}" data-id="{{index}}" wx:key="index" bindtap="custom">
+    <view class="custom">{{custom[index].problem}}</view>
+    <view class="{{custom_type[index].custom}}"  data-id="{{index}}" ></view>
+  </view> -->
+
+  <view class="custom_box">
+    <input bindblur="addTxt" value="{{addCustom}}" class="addCustom" placeholder="自定义问题（标题建议10个字以内）" maxlength="10" cursor-spacing="100" />
+    <!-- <view class="{{custom_type[3].custom}}"  data-id="3" bindtap="custom"></view> -->
+    <!-- <view bindblur="addCustom" class="addIcon">+</view> -->
+  </view>
     <view class="text">滑动设置选项个数</view>
 
   <view class="main">
@@ -54,26 +69,12 @@
        <view class="picker" start="00:00">{{validtyTime.time}}</view>
      </picker>
    </view>
-  <view class="text">填写中奖兑换方法</view>
-  <view class="exchange">
-    <!-- <view></view> -->
-    <input class="addCustom" placeholder="eg:添加微信号'kefy001',截图发送" />
-  </view>
-  <view class="text">选择或自定义问题</view>
-  <!-- <view  class="custom_box" wx:for="{{custom}}" data-id="{{index}}" wx:key="index" bindtap="custom">
-    <view class="custom">{{custom[index].problem}}</view>
-    <view class="{{custom_type[index].custom}}"  data-id="{{index}}" ></view>
-  </view> -->
-
-  <view class="custom_box">
-    <input bindblur="addTxt" value="{{addCustom}}" class="addCustom" placeholder="自定义问题（标题建议10个字以内）" maxlength="10" cursor-spacing="100" />
-    <!-- <view class="{{custom_type[3].custom}}"  data-id="3" bindtap="custom"></view> -->
-    <!-- <view bindblur="addCustom" class="addIcon">+</view> -->
-  </view>
+  
+  
 
   <view bindtap="next" class="next">下一步</view>
   </view>
-  <view class="set" wx:if="{{!open}}">
+  <view class="set" hidden="{{open!=1}}">
     <view class="text">设置问题答案</view>
       <view class="main">
       <view class="canvas-container">
@@ -103,17 +104,30 @@
         <view class="answerNum">数量</view>
         <view class="answerProbability">概率</view>
     </view>
-    <view class="main-container-btn" wx:for="{{awardsList}}" wx:key="num" wx:for-index="index" >
+    <view class="main-container-btn" wx:for="{{awards}}" wx:key="num" wx:for-index="index" >
         <view style="width: 40%;">
-          <input id="{{index}}"  bindconfirm="daiti" bindblur="daiti" type="text" maxlength="8"  class="answer"  data-index="{{index}}"   value="{{awardsList[index].award}}"  placeholder="请输入奖品(限8字)" cursor-spacing="100" />
+          <input id="{{index}}"  bindconfirm="daiti" bindblur="daiti" data-type="0" type="text" maxlength="8"  class="answer"  data-index="{{index}}"   value="{{item.name}}"  placeholder="请输入奖品(限8字)" cursor-spacing="100" />
         </view>
-        <input type="number" class="answerNum" data-index="{{index}}" value="{{awards[index].answerNum}}" bindconfirm="answerNum" bindblur="answerNum" />
-        <input type="digit" class="answerProbability" data-index="{{index}}"  value="{{awards[index].answerProbability}}" bindconfirm="answerProbability" bindblur="answerProbability" />
+        <input type="number" class="answerNum" data-index="{{index}}" data-type="1" value="{{item.answerNum}}" bindconfirm="daiti" bindblur="daiti" />
+        <input type="digit" class="answerProbability" data-index="{{index}}" data-type="2"  value="{{item.ratio}}" bindconfirm="daiti" bindblur="daiti" />
 
     </view>
     <view class="btn-save">
       <view class="last" bindtap="last">上一步</view>
-        <view class="save" bindtap="save">保存</view>
+        <view class="save" bindtap="next">下一步</view>
     </view>
+   
     
+  </view>
+  <view hidden="{{open!=2}}">
+     <view class="text">填写活动规则详情</view>
+        <view class="exchange" wx:for="{{activeRule}}">
+          <view style="width: 50rpx;text-align: right;">{{index}}.</view>
+        <input class="addCustom" placeholder="eg:添加微信号'001',截图发送" value="{{item.detail}}" />
+        <view style="width: 50rpx;height:50rpx;font-size: 40rpx;line-height: 1;text-align: center;background-color: #79b52f;border-radius: 50%;color: #fff;" wx:if="{{index==activeRule.length-1}}" bindtap="addActiveRule">+</view>
+      </view>
+      <view class="btn-save">
+        <view class="last" bindtap="last">上一步</view>
+          <view class="save" bindtap="save">保存</view>
+      </view>
   </view>

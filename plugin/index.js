@@ -1,6 +1,8 @@
 var data = require('./api/data.js')
-
+// const $ = require('./api/util')
+// const $$ = require('./api/request')
 module.exports = {
-  getData: data.getData,
-  setData: data.setData
-}
+  // getNewestActiveInfo: data.getNewestActiveInfo,
+  $:data.$,
+  $$:data.$$,
+}	

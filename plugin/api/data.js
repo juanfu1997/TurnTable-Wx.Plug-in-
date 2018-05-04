@@ -1,14 +1,17 @@
-var data = 'init data'
 
-function getData() {
-  return data
-}
+const $ = require('./util')
+const $$ = require('./request')
+// const data =  require('../components/customer/customer')
 
-function setData(value) {
-  data = value
-}
+
+
+
+// function getNewestActiveInfo(wxpublic_id,id){
+// 	// data.getNewestActiveInfo(wxpublic_id,id)
+// }
 
 module.exports = {
-  getData: getData,
-  setData: setData
+  // getNewestActiveInfo: getNewestActiveInfo,
+  $,
+  $$,
 }
